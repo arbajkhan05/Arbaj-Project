@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Game & GK Portal with Arbaj</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:oklab(67.292% 0.16384 -0.13292);
+    color:rgba(231,233,225,0.907);
+    min-height:100vh;
+}
+
+.container{
+    width:90%;
+    max-width:900px;
+    margin:auto;
+}
+
+.auth-box{
+    width:350px;
+    max-width:95%;
+    margin:80px auto;
+    background:oklab(64.203% 0.23113 -0.07696 / 0.886);
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(181,218,47,0.878);
+}
+
+.auth-box h1{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+input,
+textarea{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border:none;
+    border-radius:8px;
+    outline:none;
+}
+
+textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+button{
+    border:none;
+    padding:12px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    background:#b4298f;
+    color:white;
+    font-size:15px;
+    margin:5px;
+}
+
+button:hover{
+    opacity:.85;
+}
+
+.switch{
+    text-align:center;
+    margin-top:15px;
+    color:#110ae1;
+    cursor:pointer;
+}
+
+.error{
+    color:#f71414;
+    text-align:center;
+    margin-top:10px;
+}
+
+#dashboard{
+    display:none;
+}
+
+header{
+    background:#1b2335;
+    padding:18px;
+    margin-bottom:25px;
+}
+
+header .container{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logout{
+    background:#e53935;
+}
+
+.welcome{
+    margin:20px 0;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+}
+
+.card{
+    background:#1b2335;
+    padding:25px;
+    border-radius:15px;
+    text-align:center;
+}
+
+.card h2{
+    margin-bottom:10px;
+}
+
+.score{
+    font-size:28px;
+    color:#5fa2ff;
+}
+
+.section{
+    background:#1b2335;
+    margin-top:25px;
+    padding:25px;
+    border-radius:15px;
+}
+
+.section h2{
+    margin-bottom:15px;
+}
+
+#board{
+    width:300px;
+    max-width:100%;
+    margin:20px auto;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+}
+
+.cell{
+    height:90px;
+    background:#29344d;
+    border:2px solid #101522;
+    font-size:35px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+}
+
+.cell:hover{
+    background:#34425f;
+}
+
+#gameMessage,
+#gkQuestion{
+    text-align:center;
+    margin:15px 0;
+}
+
+.option{
+    width:100%;
+    margin:7px 0;
+    background:#29344d;
+}
+
+.option:hover{
+    background:#3a4b6c;
+}
+
+.center{
+    text-align:center;
+}
+
+/* ================= JUMPING GAME ================= */
+
+#jumpGame{
+    display:block;
+    width:100%;
+    max-width:600px;
+    height:250px;
+    margin:20px auto;
+    background:#8ed6ff;
+    border:3px solid white;
+    border-radius:10px;
+}
+
+.jumpInfo{
+    text-align:center;
+    margin:10px;
+    font-size:18px;
+}
+
+.jumpButton{
+    display:block;
+    margin:10px auto;
+    background:#e67e22;
+}
+
+.speedInfo{
+    text-align:center;
+    color:#ffd54f;
+    font-size:17px;
+    margin:8px;
+}
+
+/* CONTACT */
+
+.contact-box{
+    max-width:600px;
+    margin:auto;
+}
+
+.contact-title{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.contact-info{
+    text-align:center;
+    margin-bottom:20px;
+    line-height:1.7;
+}
+
+@media(max-width:500px){
+
+    .auth-box{
+        margin-top:40px;
+    }
+
+    header .container{
+        flex-direction:column;
+        gap:10px;
+    }
+
+    #jumpGame{
+        height:220px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ================= LOGIN ================= -->
+
+<div id="loginPage">
+
+<div class="auth-box">
+
+<h1>🎮 Game Portal with Arbaj</h1>
+
+<input
+type="text"
+id="loginUsername"
+placeholder="Username">
+
+<input
+type="password"
+id="loginPassword"
+placeholder="Password">
+
+<button
+style="width:100%"
+onclick="login()">
+Login
+</button>
+
+<p
+class="switch"
+onclick="showRegister()">
+Create New Account Here
+</p>
+
+<p
+id="loginError"
+class="error">
+</p>
+
+</div>
+
+</div>
+
+
+<!-- ================= REGISTER ================= -->
+
+<div
+id="registerPage"
+style="display:none;">
+
+<div class="auth-box">
+
+<h1>📝 Register</h1>
+
+<input
+type="text"
+id="registerUsername"
+placeholder="Create Username">
+
+<input
+type="password"
+id="registerPassword"
+placeholder="Create Password">
+
+<input
+type="password"
+id="confirmPassword"
+placeholder="Confirm Password">
+
+<button
+style="width:100%"
+onclick="register()">
+Register
+</button>
+
+<p
+class="switch"
+onclick="showLogin()">
+Already have an account? Login
+</p>
+
+<p
+id="registerError"
+class="error">
+</p>
+
+</div>
+
+</div>
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<div id="dashboard">
+
+<header>
+
+<div class="container">
+
+<h2>🎮 Game & GK Portal</h2>
+
+<button
+class="logout"
+onclick="logout()">
+Logout
+</button>
+
+</div>
+
+</header>
+
+
+<main class="container">
+
+<!-- WELCOME -->
+
+<div class="welcome">
+
+<h2>
+Welcome,
+<span id="playerName"></span> 👋
+</h2>
+
+<p>
+Play games and grow your score!
+</p>
+
+</div>
+
+
+<!-- SCORE -->
+
+<div class="cards">
+
+<div class="card">
+
+<h2>🎮 Games</h2>
+
+<p
+class="score"
+id="gameScore">
+0
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h2>🧠 GK</h2>
+
+<p
+class="score"
+id="gkScore">
+0
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h2>🏆 Total</h2>
+
+<p
+class="score"
+id="totalScore">
+0
+</p>
+
+</div>
+
+</div>
+
+
+<!-- ================= TIC TAC TOE ================= -->
+
+<div class="section">
+
+<h2>❌⭕ Tic-Tac-Toe</h2>
+
+<p class="center">
+You Play X and Computer Play O.
+</p>
+
+<div id="board"></div>
+
+<p id="gameMessage"></p>
+
+<div class="center">
+
+<button onclick="restartGame()">
+🔄 Restart
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ================= JUMPING GAME ================= -->
+
+<div class="section">
+
+<h2>🏃 Jumping Game</h2>
+
+<p class="center">
+Space / Tap button dabao aur obstacle se bacho!
+</p>
+
+<canvas
+id="jumpGame"
+width="600"
+height="250">
+</canvas>
+
+<div class="jumpInfo">
+
+Score:
+<span id="jumpScore">0</span>
+
+</div>
+
+
+<div class="speedInfo">
+
+⚡ Speed:
+<span id="jumpSpeedText">5</span>
+
+</div>
+
+
+<button
+class="jumpButton"
+onclick="jumpPlayer()">
+
+⬆️ JUMP
+
+</button>
+
+
+<div class="center">
+
+<button
+onclick="restartJumpGame()">
+
+🔄 Restart Jump Game
+
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ================= GK QUIZ ================= -->
+
+<div class="section">
+
+<h2>🧠 GK Quiz</h2>
+
+<p id="gkQuestion"></p>
+
+<div id="options"></div>
+
+<p class="center">
+
+GK Score:
+<span id="quizScore">0</span>
+
+</p>
+
+<div class="center">
+
+<button onclick="nextQuestion()">
+Next Question
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ================= PROFILE ================= -->
+
+<div class="section">
+
+<h2>👤 Profile</h2>
+
+<p>
+Username:
+<strong id="profileName"></strong>
+</p>
+
+<br>
+
+<p>
+🎮 Game Score:
+<strong id="profileGameScore">0</strong>
+</p>
+
+<p>
+🧠 GK Score:
+<strong id="profileGKScore">0</strong>
+</p>
+
+</div>
+
+
+<!-- ================= CONTACT ================= -->
+
+<div class="section">
+
+<div class="contact-box">
+
+<h2 class="contact-title">
+📞 Contact Me
+</h2>
+
+<p class="contact-info">
+📧 Email: <strong>arbajkhan78667800@gmail.com</strong>
+</p>
+
+</div>
+
+</div>
+
+
+</main>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   ACCOUNT SYSTEM
+===================================================== */
+
+function getUsers(){
+
+return JSON.parse(
+localStorage.getItem("gameUsers")
+)||[];
+
+}
+
+
+function saveUsers(users){
+
+localStorage.setItem(
+"gameUsers",
+JSON.stringify(users)
+);
+
+}
+
+
+function showRegister(){
+
+document.getElementById("loginPage").style.display="none";
+
+document.getElementById("registerPage").style.display="block";
+
+}
+
+
+function showLogin(){
+
+document.getElementById("registerPage").style.display="none";
+
+document.getElementById("loginPage").style.display="block";
+
+}
+
+
+function register(){
+
+let username=
+document.getElementById("registerUsername").value.trim();
+
+let password=
+document.getElementById("registerPassword").value;
+
+let confirmPassword=
+document.getElementById("confirmPassword").value;
+
+let error=
+document.getElementById("registerError");
+
+
+if(username==="" || password===""){
+
+error.innerText=
+"Enter Username aur password.";
+
+return;
+
+}
+
+
+if(password!==confirmPassword){
+
+error.innerText=
+"Passwords match nahi karte.";
+
+return;
+
+}
+
+
+let users=getUsers();
+
+
+if(users.find(user=>user.username===username)){
+
+error.innerText=
+"Username already exists.";
+
+return;
+
+}
+
+
+users.push({
+
+username:username,
+password:password,
+gameScore:0,
+gkScore:0
+
+});
+
+
+saveUsers(users);
+
+
+alert(
+"Account successfully created!"
+);
+
+
+document.getElementById(
+"registerUsername"
+).value="";
+
+
+document.getElementById(
+"registerPassword"
+).value="";
+
+
+document.getElementById(
+"confirmPassword"
+).value="";
+
+
+showLogin();
+
+}
+
+
+function login(){
+
+let username=
+document.getElementById("loginUsername").value.trim();
+
+let password=
+document.getElementById("loginPassword").value;
+
+let users=getUsers();
+
+
+let user=users.find(
+u=>
+u.username===username &&
+u.password===password
+);
+
+
+if(!user){
+
+document.getElementById(
+"loginError"
+).innerText=
+"Username ya password galat hai.";
+
+return;
+
+}
+
+
+localStorage.setItem(
+"loggedInUser",
+username
+);
+
+
+openDashboard();
+
+}
+
+
+function openDashboard(){
+
+let username=
+localStorage.getItem("loggedInUser");
+
+
+if(!username)return;
+
+
+document.getElementById(
+"loginPage"
+).style.display="none";
+
+
+document.getElementById(
+"registerPage"
+).style.display="none";
+
+
+document.getElementById(
+"dashboard"
+).style.display="block";
+
+
+let users=getUsers();
+
+
+let user=users.find(
+u=>u.username===username
+);
+
+
+if(!user)return;
+
+
+document.getElementById(
+"playerName"
+).innerText=user.username;
+
+
+document.getElementById(
+"profileName"
+).innerText=user.username;
+
+
+updateScores();
+
+}
+
+
+function logout(){
+
+localStorage.removeItem(
+"loggedInUser"
+);
+
+
+document.getElementById(
+"dashboard"
+).style.display="none";
+
+
+document.getElementById(
+"loginPage"
+).style.display="block";
+
+
+document.getElementById(
+"loginUsername"
+).value="";
+
+
+document.getElementById(
+"loginPassword"
+).value="";
+
+}
+
+
+/* =====================================================
+   SCORE SYSTEM
+===================================================== */
+
+function updateScores(){
+
+let username=
+localStorage.getItem("loggedInUser");
+
+
+let users=getUsers();
+
+
+let user=users.find(
+u=>u.username===username
+);
+
+
+if(!user)return;
+
+
+document.getElementById(
+"gameScore"
+).innerText=user.gameScore;
+
+
+document.getElementById(
+"gkScore"
+).innerText=user.gkScore;
+
+
+document.getElementById(
+"totalScore"
+).innerText=
+user.gameScore+user.gkScore;
+
+
+document.getElementById(
+"profileGameScore"
+).innerText=user.gameScore;
+
+
+document.getElementById(
+"profileGKScore"
+).innerText=user.gkScore;
+
+}
+
+
+function addGameScore(points){
+
+let username=
+localStorage.getItem("loggedInUser");
+
+
+let users=getUsers();
+
+
+let user=users.find(
+u=>u.username===username
+);
+
+
+if(!user)return;
+
+
+user.gameScore+=points;
+
+
+saveUsers(users);
+
+
+updateScores();
+
+}
+
+
+function addGKScore(points){
+
+let username=
+localStorage.getItem("loggedInUser");
+
+
+let users=getUsers();
+
+
+let user=users.find(
+u=>u.username===username
+);
+
+
+if(!user)return;
+
+
+user.gkScore+=points;
+
+
+saveUsers(users);
+
+
+updateScores();
+
+}
+
+
+/* =====================================================
+   TIC TAC TOE
+===================================================== */
+
+let board=[
+"","","",
+"","","",
+"","",""
+];
+
+
+let gameOver=false;
+
+
+function createBoard(){
+
+let boardElement=
+document.getElementById("board");
+
+
+boardElement.innerHTML="";
+
+
+board.forEach(
+(value,index)=>{
+
+let cell=
+document.createElement("div");
+
+
+cell.className="cell";
+
+
+cell.innerText=value;
+
+
+cell.onclick=
+()=>playerMove(index);
+
+
+boardElement.appendChild(cell);
+
+});
+
+}
+
+
+function playerMove(index){
+
+if(
+board[index]!=="" ||
+gameOver
+)return;
+
+
+board[index]="X";
+
+
+createBoard();
+
+
+if(checkWinner("X")){
+
+document.getElementById(
+"gameMessage"
+).innerText=
+"🎉 Tum jeet gaye! +10 points";
+
+
+addGameScore(10);
+
+
+gameOver=true;
+
+return;
+
+}
+
+
+if(
+board.every(cell=>cell!=="")
+){
+
+document.getElementById(
+"gameMessage"
+).innerText=
+"🤝 Match Draw hua!";
+
+
+gameOver=true;
+
+return;
+
+}
+
+
+setTimeout(
+computerMove,
+500
+);
+
+}
+
+
+function computerMove(){
+
+if(gameOver)return;
+
+
+let emptyCells=
+board
+.map(
+(value,index)=>
+value===""?index:null
+)
+.filter(
+index=>index!==null
+);
+
+
+if(emptyCells.length===0)return;
+
+
+let randomIndex=
+emptyCells[
+Math.floor(
+Math.random()*emptyCells.length
+)
+];
+
+
+board[randomIndex]="O";
+
+
+createBoard();
+
+
+if(checkWinner("O")){
+
+document.getElementById(
+"gameMessage"
+).innerText=
+"😅 Computer jeet gaya! Good Luck next time!";
+
+
+gameOver=true;
+
+return;
+
+}
+
+
+if(
+board.every(cell=>cell!=="")
+){
+
+document.getElementById(
+"gameMessage"
+).innerText=
+"🤝 Match Draw!";
+
+
+gameOver=true;
+
+}
+
+}
+
+
+function checkWinner(player){
+
+let wins=[
+
+[0,1,2],
+[3,4,5],
+[6,7,8],
+
+[0,3,6],
+[1,4,7],
+[2,5,8],
+
+[0,4,8],
+[2,4,6]
+
+];
+
+
+return wins.some(
+combination=>
+combination.every(
+index=>board[index]===player
+)
+);
+
+}
+
+
+function restartGame(){
+
+board=[
+"","","",
+"","","",
+"","",""
+];
+
+
+gameOver=false;
+
+
+document.getElementById(
+"gameMessage"
+).innerText="";
+
+
+createBoard();
+
+}
+
+
+/* =====================================================
+   JUMPING GAME
+===================================================== */
+
+let jumpCanvas=
+document.getElementById("jumpGame");
+
+
+let ctx=
+jumpCanvas.getContext("2d");
+
+
+let player={
+
+x:60,
+y:180,
+width:35,
+height:45,
+velocityY:0,
+jumping:false
+
+};
+
+
+let obstacle={
+
+x:600,
+y:195,
+width:30,
+height:30
+
+};
+
+
+let jumpScore=0;
+
+let jumpSpeed=6;
+
+let maxJumpSpeed=18;
+
+let jumpGameOver=false;
+
+
+/* =====================================================
+   DRAW JUMP GAME
+===================================================== */
+
+function drawJumpGame(){
+
+ctx.clearRect(
+0,
+0,
+jumpCanvas.width,
+jumpCanvas.height
+);
+
+
+ctx.fillStyle="#8ed6ff";
+
+ctx.fillRect(
+0,
+0,
+jumpCanvas.width,
+jumpCanvas.height
+);
+
+
+ctx.fillStyle="#4caf50";
+
+ctx.fillRect(
+0,
+225,
+jumpCanvas.width,
+25
+);
+
+
+ctx.fillStyle="#ff3333";
+
+ctx.fillRect(
+player.x,
+player.y,
+player.width,
+player.height
+);
+
+
+ctx.fillStyle="#333";
+
+ctx.fillRect(
+obstacle.x,
+obstacle.y,
+obstacle.width,
+obstacle.height
+);
+
+
+ctx.fillStyle="#111";
+
+ctx.font="20px Arial";
+
+ctx.fillText(
+"Score: "+jumpScore,
+20,
+30
+);
+
+}
+
+
+/* =====================================================
+   JUMP
+===================================================== */
+
+function jumpPlayer(){
+
+if(jumpGameOver){
+
+restartJumpGame();
+
+return;
+
+}
+
+
+if(!player.jumping){
+
+player.velocityY=-12;
+
+player.jumping=true;
+
+}
+
+}
+
+
+/* =====================================================
+   UPDATE JUMP GAME
+===================================================== */
+
+function updateJumpGame(){
+
+if(jumpGameOver)return;
+
+
+player.velocityY+=0.6;
+
+player.y+=player.velocityY;
+
+
+if(player.y>=180){
+
+player.y=180;
+
+player.velocityY=0;
+
+player.jumping=false;
+
+}
+
+
+obstacle.x-=jumpSpeed;
+
+
+if(obstacle.x<-30){
+
+obstacle.x=jumpCanvas.width;
+
+jumpScore++;
+
+
+document.getElementById(
+"jumpScore"
+).innerText=jumpScore;
+
+
+if(jumpScore%5===0){
+
+jumpSpeed+=0.8;
+
+
+if(jumpSpeed>maxJumpSpeed){
+
+jumpSpeed=maxJumpSpeed;
+
+}
+
+
+document.getElementById(
+"jumpSpeedText"
+).innerText=
+jumpSpeed.toFixed(1);
+
+
+addGameScore(5);
+
+}
+
+}
+
+
+if(
+
+player.x<
+obstacle.x+obstacle.width &&
+
+player.x+player.width>
+obstacle.x &&
+
+player.y<
+obstacle.y+obstacle.height &&
+
+player.y+player.height>
+obstacle.y
+
+){
+
+jumpGameOver=true;
+
+
+alert(
+"💥 Game Over!\nYour Jump Score: "+
+jumpScore
+);
+
+}
+
+
+drawJumpGame();
+
+}
+
+
+/* =====================================================
+   RESTART JUMP GAME
+===================================================== */
+
+function restartJumpGame(){
+
+player={
+
+x:60,
+y:180,
+width:35,
+height:45,
+velocityY:0,
+jumping:false
+
+};
+
+
+obstacle.x=
+jumpCanvas.width;
+
+
+jumpScore=0;
+
+jumpSpeed=5;
+
+jumpGameOver=false;
+
+
+document.getElementById(
+"jumpScore"
+).innerText="0";
+
+
+document.getElementById(
+"jumpSpeedText"
+).innerText="5";
+
+
+drawJumpGame();
+
+}
+
+
+/* =====================================================
+   KEYBOARD JUMP
+===================================================== */
+
+document.addEventListener(
+"keydown",
+function(event){
+
+if(event.code==="Space"){
+
+event.preventDefault();
+
+jumpPlayer();
+
+}
+
+});
+
+
+/* =====================================================
+   GK QUIZ
+===================================================== */
+
+const questions=[
+
+{
+question:"भारत की राजधानी क्या है?",
+options:[
+"Mumbai",
+"Delhi",
+"Kolkata",
+"Bihar"
+],
+answer:"Delhi"
+},
+
+{
+question:"भारत का राष्ट्रीय पशु कौन सा है?",
+options:[
+"Lion",
+"Tiger",
+"Elephant",
+"Leopard"
+],
+answer:"Tiger"
+},
+
+{
+question:"भारत का संविधान कब लागू हुआ?",
+options:[
+"15 August 1947",
+"26 January 1950",
+"2 October 1947",
+"26 November 1949"
+],
+answer:"26 January 1950"
+},
+
+{
+question:"Computer का brain किसे कहा जाता है?",
+options:[
+"RAM",
+"Hard Disk",
+"CPU",
+"Keyboard"
+],
+answer:"CPU"
+},
+
+{
+question:"Who was the first Prime Minister of India?",
+options:[
+"Dr. Rajendra Prasad",
+"Jawaharlal Nehru",
+"Sardar Vallabhbhai Patel",
+"Lal Bahadur Shastri"
+],
+answer:"Jawaharlal Nehru"
+},
+
+{
+    question:"Where is the capital is Bihar?",
+    options:[
+        "Bettiah",
+        "Motihari",
+        "Patna",
+        "Mumbai"
+    ],
+    answer:"Patna"
+},
+
+{
+question:"When did World War First take place?",
+options:[
+"1905-1910",
+"1914-1918",
+"1919-1923",
+"1939-1945"
+],
+answer:"1914-1918"
+},
+
+{
+question:"The Jallianwala Bagh massacre took place in which year?",
+options:[
+"1915",
+"1917",
+"1919",
+"1920"
+],
+answer:"1919"
+},
+
+{
+question:"When did India become independent?",
+options:[
+"15 August 1947",
+"26 January 1950",
+"2 October 1950",
+"15 August 1948"
+],
+answer:"15 August 1947"
+},
+
+{
+question:"Who built the Taj Mahal?",
+options:[
+"Akbar",
+"Shah Jahan",
+"Aurangzeb",
+"Baber"
+],
+answer:"Shah Jahan"
+},
+
+{
+question:"Which of these is used for storing data?",
+options:[
+"Hard disk",
+"Monitor",
+"Keyboard",
+"Speaker"
+],
+answer:"Hard disk"
+},
+
+{
+question:"Which device is commonly used to move the pointer on a computer screen?",
+options:[
+"Keyboard",
+"Mouse",
+"Printer",
+"CPU"
+],
+answer:"Mouse"
+},
+
+{
+question:"What is the full form of USB?",
+options:[
+"Universal Serial Bus",
+"United System Bus",
+"Universal System Board",
+"User Serial Bus"
+],
+answer:"Universal Serial Bus"
+},
+
+{
+question:"Which one is an operating system?",
+options:[
+"Windows",
+"Google",
+"Youtube",
+"Facebook"
+],
+answer:"Windows"
+},
+
+{
+question:"What is the currency of India?",
+options:[
+"Dollar",
+"Pound",
+"Rupee",
+"Dinar"
+],
+answer:"Rupee"
+},
+
+{
+question:"What is the National Bird of India?",
+options:[
+"Sparrow",
+"Peacock",
+"Parrot",
+"Eagle"
+],
+answer:"Peacock"
+},
+
+{
+question:"What was the name of India's first Moon Mission?",
+options:[
+"Chandrayaan-1",
+"Mangalyaan",
+"Gaganyaan",
+"Vikram-1"
+],
+answer:"Chandrayaan-1"
+},
+
+{
+question:"In which year did India win its first-ever Cricket World Cup?",
+options:[
+"1975",
+"1999",
+"1983",
+"2011"
+],
+answer:"1983"
+},
+
+{
+question:"Which is the national river of India?",
+options:[
+"Yamuna",
+"Ganga",
+"Godavari",
+"Narmada"
+],
+answer:"Ganga"
+},
+
+{
+question:"Which is the highest civilian award of India?",
+options:[
+"Padma Shri",
+"Padma Bhushan",
+"Padma Vibhushan",
+"Bharat Ratna"
+],
+answer:"Bharat Ratna"
+},
+
+{
+question:"HTML का पूरा नाम क्या है?",
+options:[
+"Hyper Text Markup Language",
+"High Text Machine Language",
+"Hyperlink Text Management Language",
+"Home Tool Markup Language"
+],
+answer:"Hyper Text Markup Language"
+}
+
+];
+
+
+let currentQuestion=0;
+
+let quizScore=0;
+
+
+function showQuestion(){
+
+let question=
+questions[currentQuestion];
+
+
+document.getElementById(
+"gkQuestion"
+).innerText=
+question.question;
+
+
+let optionsElement=
+document.getElementById("options");
+
+
+optionsElement.innerHTML="";
+
+
+question.options.forEach(
+option=>{
+
+let button=
+document.createElement("button");
+
+
+button.className="option";
+
+
+button.innerText=option;
+
+
+button.onclick=
+()=>checkAnswer(option);
+
+
+optionsElement.appendChild(button);
+
+});
+
+
+document.getElementById(
+"quizScore"
+).innerText=
+quizScore;
+
+}
+
+
+function checkAnswer(selected){
+
+let question=
+questions[currentQuestion];
+
+
+if(selected===question.answer){
+
+quizScore+=5;
+
+
+addGKScore(5);
+
+
+alert(
+"✅ Correct! +5 points"
+);
+
+}else{
+
+alert(
+"❌ Wrong answer.\nCorrect answer: "+
+question.answer
+);
+
+}
+
+
+document.getElementById(
+"quizScore"
+).innerText=
+quizScore;
+
+}
+
+
+function nextQuestion(){
+
+currentQuestion++;
+
+
+if(
+currentQuestion>=questions.length
+){
+
+currentQuestion=0;
+
+
+alert(
+"🎉 Quiz complete! Questions phir se start ho rahe hain."
+);
+
+}
+
+
+showQuestion();
+
+}
+
+
+/* =====================================================
+   PAGE LOAD
+===================================================== */
+
+window.onload=function(){
+
+createBoard();
+
+showQuestion();
+
+drawJumpGame();
+
+setInterval(
+updateJumpGame,
+30
+);
+
+
+let loggedInUser=
+localStorage.getItem(
+"loggedInUser"
+);
+
+
+if(loggedInUser){
+
+openDashboard();
+
+}
+
+};
+
+</script>
+
+</body>
+</html>
